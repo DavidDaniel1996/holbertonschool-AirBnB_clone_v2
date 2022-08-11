@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 """This module defines a class User"""
+import os
 from models.base_model import BaseModel
 from models.base_model import Base
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 
 
 class User(BaseModel, Base):
@@ -12,3 +14,6 @@ class User(BaseModel, Base):
     password = Column(String(128), nullable=False)
     first_name = Column(String(128))
     last_name = Column(String(128))
+
+    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+        places = relationship("Place", backref='User', cascade="delete")
