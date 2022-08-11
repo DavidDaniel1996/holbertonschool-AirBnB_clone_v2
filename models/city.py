@@ -14,4 +14,4 @@ class City(BaseModel, Base):
     name = Column(String(128), nullable=False)
 
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-        places = relationship("Place", backref='cities', cascade="delete")
+        places = relationship("Place", backref="cities", cascade="delete")
