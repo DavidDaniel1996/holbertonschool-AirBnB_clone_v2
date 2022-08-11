@@ -124,7 +124,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         new_inst = HBNBCommand.classes[arg_list[0]]()
-        storage.save()
+        new_inst.save()
         print(new_inst.id)
 
         for i in range(1, len(arg_list)):
