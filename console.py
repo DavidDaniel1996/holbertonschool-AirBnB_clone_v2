@@ -130,6 +130,7 @@ class HBNBCommand(cmd.Cmd):
                 k, v = tuple(arg_list[i].split("="))
                 if v[0] == '"':
                     v = v.replace("_", " ")
+                    v = v[1:-1]
                 kwargs_dict[k] = v
         new_inst = HBNBCommand.classes[arg_list[0]](**kwargs_dict)
         new_inst.save()
