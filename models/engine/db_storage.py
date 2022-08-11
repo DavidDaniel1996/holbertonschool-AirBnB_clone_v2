@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Module defines a class to manage Database storage for hbnb clone"""
 
+from curses import echo
 import os
 import sqlalchemy as db
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -29,22 +30,17 @@ class DBStorage:
             os.getenv('HBNB_MYSQL_HOST'),
             os.getenv('HBNB_MYSQL_DB')),
             pool_pre_ping=True)
-        print(os.getenv('HBNB_ENV'))
         if os.getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         table_dict = {}
-
         if cls is None:
-            print("Is None")
             result = self.__session.query(State).all()
         else:
-            print("Is not None")
             result = self.__session.query(cls).all()
-        print(result)
-        for row in result:
-            table_dict[f'{row.__class__}.{row.id}'] = row
+        for obj in result:
+            table_dict[f"{type(obj).__name__}.{obj.id}"] = obj
         return table_dict
 
     def new(self, obj):
@@ -59,5 +55,6 @@ class DBStorage:
 
     def reload(self):
         Base.metadata.create_all(self.__engine)
-        self.__session = scoped_session(sessionmaker(
-            bind=self.__engine, expire_on_commit=False))
+        sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session = scoped_session(sess_factory)
+        self.__session = session()
