@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ Console Module """
 import cmd
+from hmac import new
 import sys
 from models.base_model import BaseModel
 from models.__init__ import storage
@@ -19,16 +20,16 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
     classes = {
-               'BaseModel': BaseModel, 'User': User, 'Place': Place,
-               'State': State, 'City': City, 'Amenity': Amenity,
-               'Review': Review
-              }
+        'BaseModel': BaseModel, 'User': User, 'Place': Place,
+        'State': State, 'City': City, 'Amenity': Amenity,
+        'Review': Review
+    }
     dot_cmds = ['all', 'count', 'show', 'destroy', 'update']
     types = {
-             'number_rooms': int, 'number_bathrooms': int,
-             'max_guest': int, 'price_by_night': int,
-             'latitude': float, 'longitude': float
-            }
+        'number_rooms': int, 'number_bathrooms': int,
+        'max_guest': int, 'price_by_night': int,
+        'latitude': float, 'longitude': float
+    }
 
     def preloop(self):
         """Prints if isatty is false"""
@@ -132,6 +133,10 @@ class HBNBCommand(cmd.Cmd):
             k, v = tuple(arg_list[i].split("="))
             if v[0] == '"':
                 v = v.replace("_", " ")
+            print(arg_list[0])
+            print(new_inst.id)
+            print(k)
+            print(v)
             HBNBCommand.do_update(self, f"{arg_list[0]} {new_inst.id} {k} {v}")
         storage.save()
 
