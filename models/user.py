@@ -15,5 +15,4 @@ class User(BaseModel, Base):
     first_name = Column(String(128))
     last_name = Column(String(128))
 
-    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-        places = relationship("Place", backref='user', cascade="delete")
+    places = relationship("Place", backref='user', cascade="delete")
