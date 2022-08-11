@@ -42,7 +42,8 @@ class DBStorage:
             'State': State,
             'City': City,
             'User': User,
-            'Place': Place}
+            'Place': Place,
+            'Review': Review}
         if cls is None:
             for c in classes:
                 result = self.__session.query(classes[c]).all()
