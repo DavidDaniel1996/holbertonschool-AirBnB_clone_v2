@@ -52,6 +52,8 @@ class DBStorage:
     def delete(self, obj=None):
         if obj is not None:
             self.__session.delete(obj)
+        else:
+            self.__session.rollback()
 
     def reload(self):
         Base.metadata.create_all(self.__engine)
