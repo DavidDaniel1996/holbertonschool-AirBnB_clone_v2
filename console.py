@@ -133,10 +133,6 @@ class HBNBCommand(cmd.Cmd):
             k, v = tuple(arg_list[i].split("="))
             if v[0] == '"':
                 v = v.replace("_", " ")
-            print(arg_list[0])
-            print(new_inst.id)
-            print(k)
-            print(v)
             HBNBCommand.do_update(self, f"{arg_list[0]} {new_inst.id} {k} {v}")
         storage.save()
 
