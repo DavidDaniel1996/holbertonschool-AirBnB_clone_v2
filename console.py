@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+import os
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -198,8 +199,9 @@ class HBNBCommand(cmd.Cmd):
 
         key = c_name + "." + c_id
 
+        target = storage.all()[key]
         try:
-            del(storage.all()[key])
+            storage.delete(target)
             storage.save()
         except KeyError:
             print("** no instance found **")
