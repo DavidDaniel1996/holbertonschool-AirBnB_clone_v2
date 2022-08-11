@@ -20,10 +20,12 @@ os.environ['HBNB_MYSQL_DB'] = 'hbnb_dev_db'
 
 
 class DBStorage:
+    """Class for Database Storage"""
     __engine = None
     __session = None
 
     def __init__(self):
+        """Engine"""
         self.__engine = db.create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(
             os.getenv('HBNB_MYSQL_USER'),
             os.getenv('HBNB_MYSQL_PWD'),
@@ -34,6 +36,7 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
+        """Returns dictionary"""
         table_dict = {}
         if cls is None:
             result = self.__session.query(State).all()
@@ -44,18 +47,20 @@ class DBStorage:
         return table_dict
 
     def new(self, obj):
+        """Adds to database"""
         self.__session.add(obj)
 
     def save(self):
+        """Saves changes in session"""
         self.__session.commit()
 
     def delete(self, obj=None):
+        """Deletes from table"""
         if obj is not None:
             self.__session.delete(obj)
-        else:
-            self.__session.rollback()
 
     def reload(self):
+        """Loads information from Database and starts Session"""
         Base.metadata.create_all(self.__engine)
         sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         session = scoped_session(sess_factory)

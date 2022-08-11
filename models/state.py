@@ -17,6 +17,7 @@ class State(BaseModel, Base):
     else:
         @property
         def cities_att(self):
+            """Defines cities attribute for FileStorage"""
             from models import storage
             cities_dict = storage.all('City')
             cities_list = []
