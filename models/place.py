@@ -3,8 +3,17 @@
 import os
 from models.base_model import BaseModel
 from models.base_model import Base
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
+
+if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+    place_amenity = Table('place_amenity', Base.metadata,
+                          Column('place_id', String(60),
+                                 ForeignKey('places.id'),
+                                 primary_key=True, nullable=False),
+                          Column('amenity_id', String(60),
+                                 ForeignKey('amenities.id'),
+                                 primary_key=True, nullable=False))
 
 
 class Place(BaseModel, Base):
@@ -22,16 +31,34 @@ class Place(BaseModel, Base):
     longitude = Column(Float)
     amenity_ids = []
 
-    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-        reviews = relationship("Review", backref='place', cascade="delete")
-    else:
+    reviews = relationship("Review", backref='place',
+                           cascade='all, delete, delete-orphan')
+    amenities = relationship("Amenity", secondary='place_amenity',
+                             viewonly=False)
+    if os.getenv("HBNB_TYPE_STORAGE") != "db":
         @property
         def reviews_att(self):
             """Defines review attribute for FileStorage"""
             from models import storage
-            cities_dict = storage.all('Review')
-            cities_list = []
-            for key, value in cities_dict.items():
-                if value.state_id == self.id:
-                    cities_list.append(value)
-            return cities_list
+            reviews_dict = storage.all('Review')
+            reviews_list = []
+            for key, value in reviews_dict.items():
+                if value.place_id == self.id:
+                    reviews_list.append(value)
+            return reviews_list
+
+        @property
+        def amenities_att(self):
+            from models import storage
+            amenities_dict = storage.all('Amenity')
+            amenities_list = []
+            for key, value in amenities_dict.items():
+                if value.amenity_id == self.id:
+                    amenities_list.append(value)
+            return amenities_list
+
+        @amenity_ids.setter
+        def amenities_att(self, obj):
+            if type(obj).__name__ != 'Amenity':
+                return
+            self.amenity_ids.append(obj['id'])
