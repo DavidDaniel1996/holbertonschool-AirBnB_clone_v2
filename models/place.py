@@ -48,7 +48,7 @@ class Place(BaseModel, Base):
             return reviews_list
 
         @property
-        def amenities_att(self):
+        def amenities(self):
             from models import storage
             amenities_dict = storage.all('Amenity')
             amenities_list = []
@@ -57,7 +57,7 @@ class Place(BaseModel, Base):
                     amenities_list.append(value)
             return amenities_list
 
-        @amenity_ids.setter
+        @amenities.setter
         def amenities_att(self, obj):
             if type(obj).__name__ != 'Amenity':
                 return
