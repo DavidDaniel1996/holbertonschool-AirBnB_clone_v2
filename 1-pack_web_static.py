@@ -14,5 +14,5 @@ def do_pack():
     if (exists('versions') is False):
         os.mkdir('versions')
     now = datetime.now().strftime('%Y%m%d%H%M%S')
-    name = f"web_static_{now}.tgz"
-    local(f'tar -cvzf versions/{name} web_static')
+    name = "web_static_{}.tgz".format(now)
+    local('tar -cvzf versions/{} web_static'.format(name))
