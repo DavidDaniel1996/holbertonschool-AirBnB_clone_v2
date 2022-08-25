@@ -14,7 +14,7 @@ printf %s "<html>
 </html>
 " > /data/web_static/releases/test/index.html
 ln -sf /data/web_static/releases/test/ /data/web_static/current
-chown -R ubuntu [:[ubuntu]] /data/
+chown -R ubuntu:ubuntu /data/
 printf %s "server {
     listen          80 default_server;
     listen          [::]:80 default_server;
