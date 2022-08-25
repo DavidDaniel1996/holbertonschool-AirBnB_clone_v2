@@ -11,6 +11,7 @@ env.hosts = ['127.0.0.1']
 
 
 def do_pack():
+    """ Creates archive """
     if (exists('versions') is False):
         os.mkdir('versions')
     now = datetime.now().strftime('%Y%m%d%H%M%S')
