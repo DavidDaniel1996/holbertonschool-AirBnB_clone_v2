@@ -26,14 +26,17 @@ def do_deploy(archive_path):
         return False
     file_name = archive_path.split('/')[1]
     dir_name = file_name.split('.')[0]
+    new_path = '/data/web_static/releases/{}/'.format(dir_name)
 
     put(archive_path, '/tmp/')
-    run('mkdir -p /data/web_static/releases/{}'.format(dir_name))
-    run('tar -xzf /tmp/{} -C /data/web_static/releases/{}/'
-        .format(file_name, dir_name))
+    run('mkdir -p {}'.format(new_path))
+    run('tar -xzf /tmp/{} -C {}'
+        .format(file_name, new_path))
     run('rm /tmp/{}'.format(file_name))
+    run('mv {}web_static/* {}'.format(new_path, new_path))
+    run('rm -rf {}web_static'.format(new_path))
     run('rm -rf /data/web_static/current')
-    run('ln -sf /data/web_static/releases/{}/ /data/web_static/current'
-        .format(dir_name))
+    run('ln -sf {} /data/web_static/current'
+        .format(new_path))
 
     return True
