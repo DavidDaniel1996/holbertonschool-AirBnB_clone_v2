@@ -51,9 +51,9 @@ class DBStorage:
                 for obj in result:
                     table_dict[f"{type(obj).__name__}.{obj.id}"] = obj
         else:
-            result = self.__session.query(classes[cls]).all()
-        for obj in result:
-            table_dict[f"{type(obj).__name__}.{obj.id}"] = obj
+            result = self.__session.query(cls).all()
+            for obj in result:
+                table_dict[f"{type(obj).__name__}.{obj.id}"] = obj
         return table_dict
 
     def new(self, obj):
