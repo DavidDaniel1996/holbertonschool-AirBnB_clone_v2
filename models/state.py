@@ -2,6 +2,7 @@
 """ State Module for HBNB project """
 import os
 from models.base_model import BaseModel
+from models.city import City
 from models.base_model import Base
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
@@ -19,7 +20,7 @@ class State(BaseModel, Base):
         def cities(self):
             """Defines cities attribute for FileStorage"""
             from models import storage
-            cities_dict = storage.all('City')
+            cities_dict = storage.all(City)
             cities_list = []
             for key, value in cities_dict.items():
                 if value.state_id == self.id:
