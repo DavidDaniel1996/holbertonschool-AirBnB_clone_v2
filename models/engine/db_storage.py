@@ -1,9 +1,8 @@
 #!/usr/bin/python3
 """Module defines a class to manage Database storage for hbnb clone"""
 
-from curses import echo
 import os
-import sqlalchemy as db
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
 from models.city import City
@@ -26,7 +25,7 @@ class DBStorage:
 
     def __init__(self):
         """Engine"""
-        self.__engine = db.create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(
+        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(
             os.getenv('HBNB_MYSQL_USER'),
             os.getenv('HBNB_MYSQL_PWD'),
             os.getenv('HBNB_MYSQL_HOST'),
@@ -79,3 +78,4 @@ class DBStorage:
     def close(self):
         """ Closes session and starts a new one """
         self.__session.close()
+        self.reload()
