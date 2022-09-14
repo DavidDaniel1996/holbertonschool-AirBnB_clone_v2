@@ -16,7 +16,7 @@ class State(BaseModel, Base):
         cities = relationship("City", backref='State', cascade="delete")
     else:
         @property
-        def cities_att(self):
+        def cities(self):
             """Defines cities attribute for FileStorage"""
             from models import storage
             cities_dict = storage.all('City')
