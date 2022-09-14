@@ -1,28 +1,30 @@
 #!/usr/bin/python3
-""" Generates .tgz archive from web_static """
+"""fabfile to compress directory"""
 
-from genericpath import exists
-from fabric.api import hosts, env
-from fabric.operations import local, run, put
+from fabric.api import env, local, run, cd, put
 from datetime import datetime
-from contextlib import contextmanager
 import os
+
+env.abort_exception = Exception
+env.user = 'ubuntu'
+env.hosts = ['184.73.131.136', '3.93.174.162']
 
 
 def do_pack():
-    """ Creates archive """
-    env.hosts = ['127.0.0.1']
-    if (exists('versions') is False):
-        os.mkdir('versions')
-    now = datetime.now().strftime('%Y%m%d%H%M%S')
-    name = "web_static_{}.tgz".format(now)
-    local('tar -cvzf versions/{} web_static'.format(name))
+    """ Pack directory into .tgz file with specified format """
+
+    try:
+        t = datetime.utcnow().strftime('%Y%m%d%H%M%S')
+        name = "versions/web_static_{}.tgz".format(t)
+        local("mkdir -p versions")
+        res = local("tar -cvzf {} web_static".format(name))
+        return(name)
+    except Exception:
+        return None
 
 
-@hosts(['54.89.173.194', '52.91.171.59'])
-@contextmanager
-def do_deploy(archive_path):
-    """ Deploys archive """
+def do_deploy(archive_path=''):
+    """ Distributes archive to remote servers """
 
     if os.path.exists(archive_path) is False:
         return False
