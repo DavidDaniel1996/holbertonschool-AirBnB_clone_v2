@@ -23,22 +23,26 @@ def do_pack():
 @contextmanager
 def do_deploy(archive_path):
     """ Deploys archive """
-    if exists(archive_path) is False:
-        return False
-    file_name = archive_path.split('/')[1]
-    dir_name = file_name.split('.')[0]
-    new_path = '/data/web_static/releases/{}/'.format(dir_name)
 
+    if os.path.exists(archive_path) is False:
+        return False
     try:
-        put(archive_path, '/tmp/')
-        run('mkdir -p {}'.format(new_path))
-        run('tar -xzf /tmp/{} -C {}'
-            .format(file_name, new_path))
-        run('rm /tmp/{}'.format(file_name))
-        run('mv {}web_static/* {}'.format(new_path, new_path))
-        run('rm -rf {}web_static'.format(new_path))
-        run('rm -rf /data/web_static/current')
-        run('ln -sf {} /data/web_static/current'
-            .format(new_path))
-    except SystemExit:
+        file_name = archive_path.rsplit('/', 1)[1]
+        put(archive_path, remote_path="/tmp/{}".format(file_name))
+
+        file_pre = file_name[:-4]
+        with cd('/tmp/'):
+            run('mkdir -p /data/web_static/releases/{}'.format(file_pre))
+            run('tar -zxf {} --directory /data/web_static/releases/{}'
+                .format(file_name, file_pre))
+            run(('mv /data/web_static/releases/{}/web_static/* '
+                '/data/web_static/releases/{}/').format(file_pre, file_pre))
+            run('rm -rf /data/web_static/releases/{}/web_static'
+                .format(file_pre))
+            run('rm -f {}'.format(file_name))
+            run('rm -f /data/web_static/current')
+            run('ln -sf /data/web_static/releases/{}/ /data/web_static/current'
+                .format(file_pre))
+            return True
+    except Exception:
         return False
